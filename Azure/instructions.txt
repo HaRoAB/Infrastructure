@@ -1,0 +1,33 @@
+
+// Azure CLI
+az login
+az account show
+az account list --query "[?user.name=='<microsoft_account_email>'].{Name:name, ID:id, Default:isDefault}" --output Table
+az account set --subscription "<subscription_id_or_subscription_name>"
+
+// Bash
+export MSYS_NO_PATHCONV=1
+az ad sp create-for-rbac --name <service_principal_name> --role Contributor --scopes /subscriptions/<subscription_id>
+
+export ARM_SUBSCRIPTION_ID="<azure_subscription_id>"
+export ARM_TENANT_ID="<azure_subscription_tenant_id>"
+export ARM_CLIENT_ID="<service_principal_appid>"
+export ARM_CLIENT_SECRET="<service_principal_password>"
+
+printenv | grep ^ARM*
+
+// Create files:
+    providers.tf
+    ssh.tf
+    main.tf
+    variables.tf
+    outputs.tf
+
+// Initiera Terraform
+terraform init -upgrade
+
+// Skapa en Terraform-körningsplan
+terraform plan -out main.tfplan
+
+// Tillämpa en Terraform-körningsplan
+terraform apply main.tfplan
