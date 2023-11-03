@@ -1,4 +1,5 @@
 
+
 // Azure CLI
 az login
 az account show
@@ -31,3 +32,13 @@ terraform plan -out main.tfplan
 
 // Tillämpa en Terraform-körningsplan
 terraform apply main.tfplan
+
+// Hämta Kubernetes-konfigurationen från Terraform-tillståndet och lagra den i en fil som kubectl 
+echo "$(terraform output kube_config)" > ./azurek8s
+
+// Kontrollera att föregående kommando inte lade till ett ASCII EOT-tecken med hjälp av följande kommando.
+cat ./azurek8s
+    // Om <<EOT och EOT finns i filen i början och slutet, ta bort dem
+
+// Ange en miljövariabel så kubectl att du kan hämta rätt konfiguration med hjälp av följande kommando.
+export KUBECONFIG=./azurek8s

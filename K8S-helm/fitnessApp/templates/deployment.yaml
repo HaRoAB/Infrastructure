@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitnessapp-deployment #name it 
+  namespace: fitnessappnamespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fitnessapp #change dis vaddd?
+  template:
+    metadata:
+      labels:
+        app:  #also dis
+    spec:
+      containers:
+      - name: fitnessapp  #yolo
+        image: robin/robin:latest #change this 
+        ports:
+        - containerPort: 80
+        envFrom: 
+        - configMapRef:
+            name: app-config
