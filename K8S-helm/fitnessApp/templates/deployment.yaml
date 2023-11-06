@@ -11,11 +11,11 @@ spec:
   template:
     metadata:
       labels:
-        app:  #also dis
+        app:  fitnessapp
     spec:
       containers:
       - name: fitnessapp  #yolo
-        image: robin/robin:latest #change this 
+        image: robonon/fitnessapp:latest #change this 
         ports:
         - containerPort: 80
         envFrom: 

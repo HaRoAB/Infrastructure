@@ -5,9 +5,9 @@ metadata:
   namespace: fitnessappnamespace
 spec:
   selector: # Den här servicen route:ar traffik till poddar som är märkta med: app: receptbank.
-    app: 
+    app: fitnessapp
   ports: #definierar portar som ska lyssnas på och forwarda till. 
   - protocol: TCP
     port: 80
     targetPort: 80
-  type: ClusterIP # Tjänsten kommer endast att vara tillgänglig inom klustret. Den kommer inte att vara exponerad externt.
+  type: ClusterIP
