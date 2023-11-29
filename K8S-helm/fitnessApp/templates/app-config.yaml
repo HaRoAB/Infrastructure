@@ -4,3 +4,4 @@ metadata:
   name: app-config
   namespace: fitnessappnamespace
 data:
+  WORKOUT_API_URL: "http://apiservice:8080"

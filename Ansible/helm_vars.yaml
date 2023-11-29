@@ -1,0 +1,22 @@
+# AZURE_CLIENT_ID: "your_azure_client_id"
+# AZURE_SECRET: "your_azure_client_secret"
+# AZURE_SUBSCRIPTION_ID: "your_azure_subscription_id"
+# AZURE_TENANT: "your_azure_tenant_id"
+
+resource_group: "your_resource_group"
+location: "East US"
+
+helm_charts:
+  - name: "ingress"
+    chart_ref: "../K8s-helm/ingress/Chart.yaml"
+    values_file: "../K8S-helm/ingress/values.yaml"
+
+  - name: "fitness app chart"
+    chart_ref: "../K8s-helm/fitnessApp/Chart.yaml"
+    values_file: "../K8S-helm/fitnessApp/values.yaml"
+  
+  - name: "workoutbuilder"
+    chart_ref: "../K8s-helm/workoutBuilderService/"
+    values_file: "../K8S-helm/workoutBuilderService/values.yaml"
+
+helm_deploy_state: "present"

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apiservice
+  namespace: fitnessappnamespace
+spec:
+  selector: # Den här servicen route:ar traffik till pod
+    app: api
+  ports: #definierar portar som ska lyssnas på och forwarda till. 
+  - protocol: TCP
+    port: 8080
+    targetPort: 80
+  type: ClusterIP

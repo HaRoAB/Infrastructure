@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fitnessapp-deployment #name it 
+  name: api
   namespace: fitnessappnamespace
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
-      app: fitnessapp #change dis vaddd?
+      app: api 
   template:
     metadata:
       labels:
-        app:  fitnessapp
+        app:  api
     spec:
       containers:
-      - name: fitnessapp  #yolo
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      - name: api  
+        image: robonon/workoutbuilderapi:latest  
         ports:
         - containerPort: 80
         envFrom: 
         - configMapRef:
-            name: app-config
+            name: api-config

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: fitnessappnamespace
+data:
+  MONGO_COLLECTION_NAME: "workouts"
+  MONGO_DATABASE_NAME: "all_your_database_are_belong_to_us"
+  MONGO_CONNECTION_STRING: "mongodb://mongodb-service:27017"
