@@ -33,9 +33,8 @@ resource "azurerm_kubernetes_cluster" "default" {
     os_disk_size_gb = 30
   }
 
-  service_principal {
-    client_id     = var.appId
-    client_secret = var.password
+  identity {
+    type = "SystemAssigned"
   }
 
   role_based_access_control_enabled = true
@@ -51,11 +50,21 @@ resource "azurerm_container_registry" "default" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   sku                 = "Basic"
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
+
+# resource "azurerm_role_assignment" "acr_push" {
+#   scope                = azurerm_container_registry.default.id
+#   principal_id         = "1b53fd67-66d5-4dba-a3c1-16b8b4b1eaa7"
+#   role_definition_name = "AcrPush"
+# }
 
 resource "azurerm_role_assignment" "default" {
   depends_on = [ azurerm_kubernetes_cluster.default, azurerm_container_registry.default ]
-  principal_id                     = azurerm_kubernetes_cluster.default.service_principal.0.client_id
+  principal_id                     = azurerm_kubernetes_cluster.default.kubelet_identity[0].object_id
   role_definition_name             = "AcrPull"
   scope                            = azurerm_container_registry.default.id
   skip_service_principal_aad_check = true
@@ -99,11 +108,39 @@ resource "null_resource" "config_kubectl" {
     command = "kubectl config use-context ${azurerm_kubernetes_cluster.default.name}"
   }
 }
+
 // Install Nginx Ingress Controller ---------------------------------------------
 resource "null_resource" "apply_deploy_yaml" {
   depends_on = [null_resource.config_kubectl]
   provisioner "local-exec" {
     command = "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/cloud/deploy.yaml -n ingress-nginx"
+  }
+}
+
+// Github Runner ---------------------------------------------------------------
+resource "helm_release" "github_runner" {
+  name       = "runner-controller"
+  repository = "https://github.com/actions/runner-helm-chart"
+  chart      = "actions-runner-controller/actions-runner-controller"
+  
+  set {
+    name  = "github.owner"
+    value = "Robonon"
+  }
+
+  set {
+    name  = "github.repository"
+    value = "HaRoAB"
+  }
+
+  set {
+    name  = "runner.image"
+    value = ""
+  }
+
+  set {
+    name  = "runner.imagePullSecrets"
+    value = "acr-credentials-secret"
   }
 }
 

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-runner
+spec:
+  replicas: 3  # Set the desired number of replicas
+  selector:
+    matchLabels:
+      app: github-runner
+  template:
+    metadata:
+      labels:
+        app: github-runner
+    spec:
+      containers:
+      - name: github-runner
+        image: <your-github-runner-image>  # Replace with your GitHub Runner image
+        env:
+          - name: RUNNER_NAME
+            value: <runner-name>  # Set your runner's name
+          - name: GITHUB_REPO_URL
+            value: <repository-url>  # Set the GitHub repository URL
+          # Add other environment variables as needed
+        volumeMounts:
+          - name: runner-pvc
+            mountPath: /_work  # Mount path for persistent work data
+      volumes:
+        - name: runner-pvc
+          # Define your PersistentVolumeClaim (PVC) here if needed
+
+# Define your PersistentVolumeClaim (PVC) if needed
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: runner-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi  # Set your desired storage size
