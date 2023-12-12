@@ -56,13 +56,13 @@ resource "azurerm_container_registry" "default" {
   }
 }
 
-# resource "azurerm_role_assignment" "acr_push" {
-#   scope                = azurerm_container_registry.default.id
-#   principal_id         = "1b53fd67-66d5-4dba-a3c1-16b8b4b1eaa7"
-#   role_definition_name = "AcrPush"
-# }
+resource "azurerm_role_assignment" "acr_push" {
+  scope                = azurerm_container_registry.default.id
+  principal_id         = azurerm_kubernetes_cluster.default.identity[0].principal_id
+  role_definition_name = "AcrPush"
+}
 
-resource "azurerm_role_assignment" "default" {
+resource "azurerm_role_assignment" "acr_pull" {
   depends_on = [ azurerm_kubernetes_cluster.default, azurerm_container_registry.default ]
   principal_id                     = azurerm_kubernetes_cluster.default.kubelet_identity[0].object_id
   role_definition_name             = "AcrPull"

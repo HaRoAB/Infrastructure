@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# start Docker
+sudo service docker start
+
 ORGANIZATION=$ORGANIZATION
 ACCESS_TOKEN=$ACCESS_TOKEN
 

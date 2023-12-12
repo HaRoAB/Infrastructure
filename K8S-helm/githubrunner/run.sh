@@ -7,6 +7,7 @@ docker run \
   --env ORGANIZATION=$ORGANIZATION \
   --env ACCESS_TOKEN=$ACCESS_TOKEN \
   --name runner \
-  --privileged
+  --privileged \
+  runner-image 
 
-  # read -p "Press any key to continue... " -n1 -s
+  read -p "Press any key to continue... " -n1 -s
