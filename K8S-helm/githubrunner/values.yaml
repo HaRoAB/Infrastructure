@@ -4,6 +4,10 @@
 
 replicaCount: 1
 
+ACCESS_TOKEN: "token"
+ACR_NAME: "acrname"
+ACR_SERVER: "imagename"
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent

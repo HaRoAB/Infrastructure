@@ -23,3 +23,9 @@ variable "node_size" {
   description = "Azure Kubernetes Service Cluster node size"
   default     = "Standard_D2_v2"
 }
+
+variable "access_token" {
+  description = "access token for github runner"
+  default = "gh_1"
+  # sensitive = true
+}

@@ -77,6 +77,13 @@ resource "kubernetes_namespace" "fitnessappnamespace" {
   }
 }
 
+resource "kubernetes_namespace" "github-runner" {
+  depends_on = [azurerm_kubernetes_cluster.default]
+  metadata {
+    name = "github-runner"
+  }
+}
+
 provider "kubernetes" {
   config_path = "~/.kube/config" # Set the path to your kubeconfig file
 
@@ -119,28 +126,23 @@ resource "null_resource" "apply_deploy_yaml" {
 
 // Github Runner ---------------------------------------------------------------
 resource "helm_release" "github_runner" {
+  depends_on = [null_resource.config_kubectl, kubernetes_namespace.fitnessappnamespace]
   name       = "runner-controller"
-  repository = "https://github.com/actions/runner-helm-chart"
-  chart      = "actions-runner-controller/actions-runner-controller"
-  
+  chart      = "./githubrunner-0.1.0.tgz"
+
   set {
-    name  = "github.owner"
-    value = "Robonon"
+    name  = "ACCESS_TOKEN"
+    value = var.access_token
   }
 
   set {
-    name  = "github.repository"
-    value = "HaRoAB"
+    name  = "ACR_NAME"
+    value = azurerm_container_registry.default.name
   }
 
   set {
-    name  = "runner.image"
-    value = ""
-  }
-
-  set {
-    name  = "runner.imagePullSecrets"
-    value = "acr-credentials-secret"
+    name  = "ACR_SERVER"
+    value = azurerm_container_registry.default.login_server
   }
 }
 
@@ -149,6 +151,7 @@ resource "helm_release" "fitnessapp" {
   depends_on = [null_resource.config_kubectl, kubernetes_namespace.fitnessappnamespace]
   name       = "fitnessapp-release"
   chart = "./fitnessapp-0.1.0.tgz"
+  cleanup_on_fail = true
   values = [
       <<-EOF
       image:
@@ -162,6 +165,7 @@ resource "helm_release" "ingress" {
   depends_on = [null_resource.config_kubectl, kubernetes_namespace.fitnessappnamespace]
   name       = "ingress-release"
   chart = "./ingress-0.1.0.tgz"
+  cleanup_on_fail = true
   values = [
       <<-EOF
       image:
@@ -175,6 +179,7 @@ resource "helm_release" "api" {
   depends_on = [null_resource.config_kubectl, kubernetes_namespace.fitnessappnamespace]
   name       = "api-release"
   chart = "./api-0.1.0.tgz"
+  cleanup_on_fail = true
   values = [
       <<-EOF
       image:
@@ -188,6 +193,7 @@ resource "helm_release" "mongodb" {
   depends_on = [null_resource.config_kubectl, kubernetes_namespace.fitnessappnamespace]
   name       = "mongodb-release"
   chart = "./mongodb-0.1.0.tgz"
+  cleanup_on_fail = true
   values = [
       <<-EOF
       image:

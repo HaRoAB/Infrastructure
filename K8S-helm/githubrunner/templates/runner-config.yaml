@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: runner-config
+  namespace: github-runner
+data:
+  ACR_NAME: {{ .Values.ACR_NAME }}
+  ACR_SERVER: {{ .Values.ACR_SERVER }}
+  ORGANIZATION: "HaRoAB"
+  ACCESS_TOKEN: {{ .Values.ACCESS_TOKEN }}

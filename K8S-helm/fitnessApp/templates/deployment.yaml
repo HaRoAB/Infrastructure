@@ -7,14 +7,14 @@ spec:
   replicas: 4
   selector:
     matchLabels:
-      app: fitnessapp #change dis vaddd?
+      app: fitnessapp 
   template:
     metadata:
       labels:
         app:  fitnessapp
     spec:
       containers:
-      - name: fitnessapp  #yolo
+      - name: fitnessapp  
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 80
