@@ -16,6 +16,8 @@ spec:
       containers:
         - name: github-runner
           image: robonon/runner-image
+          securityContext:
+            privileged: true
           envFrom:
             - configMapRef:
                 name: runner-config
